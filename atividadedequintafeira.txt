@@ -1,0 +1,100 @@
+DROP DATABASE IF EXISTS livrariasenai;
+
+CREATE DATABASE IF NOT EXISTS livrariasenai;
+
+USE livrariasenai;
+
+CREATE TABLE IF NOT EXISTS tb_cliente (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(45),
+    cpf VARCHAR(11),
+    rg VARCHAR(11),
+    email VARCHAR(45)
+);
+
+select * from tb_cliente;
+
+CREATE TABLE IF NOT EXISTS tb_clientes_telefones (
+    id_telefone INT AUTO_INCREMENT PRIMARY KEY,
+    telefone VARCHAR(15),
+    tb_cliente_id_cliente INT,
+    FOREIGN KEY (tb_cliente_id_cliente) REFERENCES tb_cliente(id_cliente)
+);
+
+select * from tb_clientes_telefones;
+
+CREATE TABLE IF NOT EXISTS tb_clientes_endereco (
+    id_endereco INT AUTO_INCREMENT PRIMARY KEY,
+    rua VARCHAR(45),
+    bairro VARCHAR(45),
+    numero INT,
+    cidade VARCHAR(45),
+    estado VARCHAR(45),
+    tb_cliente_id_cliente INT,
+    FOREIGN KEY (tb_cliente_id_cliente) REFERENCES tb_cliente(id_cliente)
+);
+
+select * from tb_clientes_endereco;
+
+CREATE TABLE IF NOT EXISTS tb_editora (
+    id_editora INT AUTO_INCREMENT PRIMARY KEY,
+    nome_editora VARCHAR(45),
+    nome_contato VARCHAR(45),
+    email VARCHAR(45)
+);
+
+select * from tb_editora;
+
+CREATE TABLE IF NOT EXISTS tb_livro (
+    id_livro INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(45),
+    categoria VARCHAR(45),
+    isbn VARCHAR(13),
+    ano DATE,
+    valor DECIMAL(10,2),
+    autor VARCHAR(45),
+    tb_editora_id_editora INT,
+    FOREIGN KEY (tb_editora_id_editora) REFERENCES tb_editora(id_editora)
+);
+
+select * from tb_livro;
+
+CREATE TABLE IF NOT EXISTS tb_estoque (
+    quantidade INT,
+    tb_livro_id_livro INT,
+    FOREIGN KEY (tb_livro_id_livro) REFERENCES tb_livro(id_livro)
+);
+
+select * from tb_estoque;
+
+CREATE TABLE IF NOT EXISTS tb_pedido (
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    data DATE,
+    tb_cliente_id_cliente INT,
+    FOREIGN KEY (tb_cliente_id_cliente) REFERENCES tb_cliente(id_cliente)
+);
+
+select * from tb_pedido;
+
+CREATE TABLE IF NOT EXISTS tb_item_pedido (
+    tb_pedido_id_pedido INT,
+    tb_livro_id_livro INT,
+    quantidade INT,
+    PRIMARY KEY (tb_pedido_id_pedido, tb_livro_id_livro),
+    FOREIGN KEY (tb_pedido_id_pedido) REFERENCES tb_pedido(id_pedido),
+    FOREIGN KEY (tb_livro_id_livro) REFERENCES tb_livro(id_livro)
+);
+
+select * from tb_item_pedido;
+
+INSERT INTO tb_cliente (nome, cpf, rg, email) VALUES
+('Maria', '23456789001', '2345678', 'maria@email.com'),
+('José', '34567890123', '3456789', 'jose@email.com'),
+('Mariana', '34567890123', '3456789', 'mariana@email.com'),
+('Pedro', '12345678900', '1234567', 'joao@email.com'),
+('Bruno', '23456789001', '2345678', 'maria@email.com'),
+('Bruna', '34567890123', '3456789', 'jose@email.com'),
+('Julio', '34567890123', '3456789', 'mariana@email.com'),
+('Julia', '12345678900', '1234567', 'joao@email.com'),
+('Nicole', '23456789001', '2345678', 'maria@email.com'),
+('Gustavo', '34567890123', '3456789', 'mariana@email.com');
